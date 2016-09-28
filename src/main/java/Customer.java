@@ -46,28 +46,21 @@ public class Customer {
         return customer;
       }
     }
+    public List<Object> getInventories() {
+    List<Object> allInventories = new ArrayList<Object>();
 
-    // public List<Object> getMonsters() {
-    //   List<Object> allMonsters = new ArrayList<Object>();
-    //
-    //   try(Connection con = DB.sql2o.open()) {
-    //     String sqlFire = "SELECT * FROM monsters WHERE customerId=:id AND type='fire';";
-    //     List<FireMonster> fireMonsters = con.createQuery(sqlFire)
-    //       .addParameter("id", this.id)
-    //       .throwOnMappingFailure(false)
-    //       .executeAndFetch(FireMonster.class);
-    //     allMonsters.addAll(fireMonsters);
-    //
-    //
-    //     String sqlWater = "SELECT * FROM monsters WHERE customerId=:id AND type='water';";
-    //     List<WaterMonster> waterMonsters = con.createQuery(sqlWater)
-    //       .addParameter("id", this.id)
-    //       .throwOnMappingFailure(false)
-    //       .executeAndFetch(WaterMonster.class);
-    //     allMonsters.addAll(waterMonsters);
-    //     }
-    //     return allMonsters;
-    // }
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM inventories WHERE customerid=:id";
+      List<Inventory> inventories = con.createQuery(sql)
+        .addParameter("id", this.id)
+        .throwOnMappingFailure(false)
+        .executeAndFetch(Inventory.class);
+      allInventories.addAll(inventories);
+
+      }
+      return allInventories;
+    }
+
     @Override
    public boolean equals(Object otherCustomer){
      if (!(otherCustomer instanceof Customer)) {
@@ -79,4 +72,4 @@ public class Customer {
      }
    }
 
-  }
+}

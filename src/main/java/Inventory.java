@@ -11,6 +11,8 @@ public class Inventory {
   private String name;
   private int customerId;
   private int id;
+  private int inventoryLevel;
+  private String type;
 
   public Inventory(String name, int customerId){
     this.name = name;
@@ -26,17 +28,40 @@ public class Inventory {
   public int getId(){
     return id;
   }
+  public int getInventoryLevel(){
+    return inventoryLevel;
+  }
+  public String getType(){
+    return type;
+  }
+  public static List<Inventory> all(){
+    String sql = "SELECT * FROM inventories";
+    try(Connection con = DB.sql2o.open()){
+      return con.createQuery(sql).executeAndFetch(Inventory.class);
+    }
+  }
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO inventories (name, customerId) VALUES (:name, :customerId)";
+      String sql = "INSERT INTO inventories (name, customerId, inventoryLevel, type) VALUES (:name, :customerId, :inventoryLevel, :type)";
       this.id = (int) con.createQuery(sql, true)
         .addParameter("name", this.name)
         .addParameter("customerId", this.customerId)
+        .addParameter("inventoryLevel", this.inventoryLevel)
+        .addParameter("type", this.type)
         .executeUpdate()
         .getKey();
     }
   }
+  public void update(int inventoryLevel) {
+  try(Connection con = DB.sql2o.open()) {
+    String sql = "UPDATE inventories SET inventorylevel = :inventorylevel WHERE id = :id";
+    con.createQuery(sql)
+      .addParameter("inventorylevel", inventoryLevel)
+      .addParameter("id", id)
+      .executeUpdate();
+  }
+}
   public List<Inventory> getInventory() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM inventories where customerId=:id";
@@ -54,7 +79,6 @@ public class Inventory {
       return inventory;
     }
   }
-
 
   @Override
   public boolean equals(Object otherInventory){

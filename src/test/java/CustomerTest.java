@@ -61,16 +61,5 @@ public class CustomerTest {
       secondCustomer.save();
       assertEquals(Customer.find(secondCustomer.getId()), secondCustomer);
     }
-    // @Test
-    // public void getMonsters_retrievesAllMonstersFromDatabase_monstersList() {
-    //   Customer testCustomer = new Customer("Henry", "henry@henry.com");
-    //   testCustomer.save();
-    //   FireMonster firstMonster = new FireMonster("Smokey", testCustomer.getId());
-    //   firstMonster.save();
-    //   WaterMonster secondMonster = new WaterMonster("Drippy", testCustomer.getId());
-    //   secondMonster.save();
-    //   Object[] monsters = new Object[] {firstMonster, secondMonster };
-    //   assertTrue(testCustomer.getMonsters().containsAll(Arrays.asList(monsters)));
-    // }
 
 }
