@@ -78,11 +78,10 @@ public class InventoryTest {
     assertTrue(testCustomer.getInventories().containsAll(Arrays.asList(inventories)));
   }
   @Test
-  public void Updates_returnsAInstancesOfInventory_true() {
+  public void Updates_returnsAnInventoryValueOfAnUpdatedItem_4() {
     Inventory firstInventory = new Inventory("Carabiners", 1);
     firstInventory.save();
-    firstInventory.update(4);
-    assertEquals(4, Inventory.find(firstInventory.getId()).getInventoryLevel());
+    firstInventory.update(3);
+    assertEquals(3, Inventory.find(firstInventory.getId()).getInventoryLevel());
   }
-
 }

@@ -9,16 +9,21 @@ import java.util.TimerTask;
 
 public class Inventory {
   private String name;
+  private int price;
   private int customerId;
+  private Timestamp sale;
   private int id;
-  private int inventoryLevel;
-  private String type;
+  private int itemLevel;
 
-  public Inventory(String name, int customerId){
+  public static final int MIN_ALL_LEVELS = 0;
+
+  public Inventory(String name, int price){
     this.name = name;
-    this.customerId = customerId;
+    this.price = price;
   }
-
+  public int getItemLevel(){
+    return itemLevel;
+  }
   public String getName(){
     return name;
   }
@@ -28,11 +33,11 @@ public class Inventory {
   public int getId(){
     return id;
   }
-  public int getInventoryLevel(){
+  public int getPrice(){
     return inventoryLevel;
   }
-  public String getType(){
-    return type;
+  public Timestamp getSale(){
+    return sale;
   }
   public static List<Inventory> all(){
     String sql = "SELECT * FROM inventories";
@@ -43,12 +48,11 @@ public class Inventory {
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO inventories (name, customerId, inventoryLevel, type) VALUES (:name, :customerId, :inventoryLevel, :type)";
+      String sql = "INSERT INTO inventories (name, price, customerid, sale) VALUES (:name, :price, :customerid, now())";
       this.id = (int) con.createQuery(sql, true)
         .addParameter("name", this.name)
-        .addParameter("customerId", this.customerId)
-        .addParameter("inventoryLevel", this.inventoryLevel)
-        .addParameter("type", this.type)
+        .addParameter("customerid", this.customerId)
+        .addParameter("price", this.price)
         .executeUpdate()
         .getKey();
     }
@@ -60,8 +64,28 @@ public class Inventory {
       .addParameter("inventorylevel", inventoryLevel)
       .addParameter("id", id)
       .executeUpdate();
+    }
   }
-}
+  public boolean isSale() {
+  if (itemLevel <= MIN_ALL_LEVELS)
+    return false;
+  }
+  return true;
+  }
+
+  public void sales(int sale){
+    // if(sale > inventoryLevel){
+    //   throw new UnsupportedOperationException("Unsuficient item inventory!");
+    // }
+    try(Connection con = DB.sql2o.open()) {
+      int newInventory = inventoryLevel - sale;
+      String sql = "UPDATE inventories SET inventorylevel = :inventorylevel WHERE id = :id";
+      con.createQuery(sql)
+        .addParameter("inventorylevel", newInventory)
+        .addParameter("id", id)
+        .executeUpdate();
+      }
+  }
   public List<Inventory> getInventory() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM inventories where customerId=:id";

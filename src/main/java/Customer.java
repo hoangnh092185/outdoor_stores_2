@@ -11,7 +11,6 @@ public class Customer {
     this.name = name;
     this.email = email;
   }
-
   public String getName() {
     return name;
   }
@@ -48,7 +47,6 @@ public class Customer {
     }
     public List<Object> getInventories() {
     List<Object> allInventories = new ArrayList<Object>();
-
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM inventories WHERE customerid=:id";
       List<Inventory> inventories = con.createQuery(sql)
@@ -56,7 +54,6 @@ public class Customer {
         .throwOnMappingFailure(false)
         .executeAndFetch(Inventory.class);
       allInventories.addAll(inventories);
-
       }
       return allInventories;
     }
